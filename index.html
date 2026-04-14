@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>RankVision | Premium Keyword Position Checker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* CSS Variables for Themes */
+        :root {
+            /* Light Theme */
+            --bg-gradient-1: #667eea;
+            --bg-gradient-2: #764ba2;
+            --bg-gradient-start: #f5f7fa;
+            --bg-gradient-end: #e9eef5;
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --border-light: rgba(0, 0, 0, 0.08);
+            --input-bg: #ffffff;
+            --input-border: #e2e8f0;
+            --input-focus: #667eea;
+            --btn-primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --btn-primary-hover: linear-gradient(135deg, #5a67d8 0%, #6b46a0 100%);
+            --btn-secondary-bg: #e2e8f0;
+            --btn-secondary-hover: #cbd5e0;
+            --btn-text: #ffffff;
+            --table-header-bg: #f7fafc;
+            --table-row-hover: #fef5e7;
+            --shadow-sm: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 20px 35px -12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --rank-1: #10b981;
+            --rank-2: #f59e0b;
+            --rank-3: #ef4444;
+            --dropdown-bg: #ffffff;
+            --accent-glow: rgba(102, 126, 234, 0.2);
+        }
+
+        body.dark {
+            --bg-gradient-start: #0f0c29;
+            --bg-gradient-end: #1a1a3e;
+            --card-bg: rgba(26, 26, 62, 0.95);
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-light: rgba(255, 255, 255, 0.1);
+            --input-bg: #1e1e3f;
+            --input-border: #334155;
+            --btn-secondary-bg: #334155;
+            --btn-secondary-hover: #475569;
+            --table-header-bg: #1e1e3f;
+            --table-row-hover: #2d2d5e;
+            --dropdown-bg: #1e1e3f;
+            --shadow-md: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
+            --accent-glow: rgba(102, 126, 234, 0.3);
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            transition: background 0.3s ease;
+        }
+
+        /* Main Card */
+        .card {
+            max-width: 1320px;
+            width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-light);
+        }
+
+        /* Header with gradient accent */
+        .card-header {
+            padding: 1.8rem 2rem;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08));
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.25rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: var(--btn-secondary-bg);
+            border: none;
+            border-radius: 3rem;
+            padding: 0.6rem 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.85rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.02);
+            background: var(--btn-secondary-hover);
+        }
+
+        /* Body */
+        .card-body {
+            padding: 2rem;
+        }
+
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        input {
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            font-size: 1rem;
+            color: var(--text-primary);
+            outline: none;
+            font-family: inherit;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+
+        /* Custom Country Dropdown */
+        .country-selector {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-btn {
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            font-size: 1rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-btn:hover {
+            border-color: #667eea;
+        }
+
+        .dropdown-btn span:first-child {
+            flex: 1;
+        }
+
+        .dropdown-arrow {
+            transition: transform 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .dropdown-arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            right: 0;
+            background: var(--dropdown-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 1.2rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .dropdown-menu.open {
+            display: block;
+            animation: slideDown 0.25s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .search-wrapper {
+            padding: 0.8rem;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--dropdown-bg);
+        }
+
+        .search-wrapper input {
+            padding: 0.7rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 1rem;
+        }
+
+        /* Scrollable Country List */
+        .country-list {
+            max-height: 260px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .country-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .country-list::-webkit-scrollbar-track {
+            background: var(--border-light);
+            border-radius: 10px;
+        }
+        .country-list::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .country-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .country-item:hover {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.15), transparent);
+            padding-left: 1.3rem;
+        }
+
+        .country-item.selected {
+            background: linear-gradient(135deg, #667eea20, #764ba220);
+            color: #667eea;
+            font-weight: 600;
+            border-left: 3px solid #667eea;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.8rem;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 2rem;
+            padding: 0.85rem 1.8rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--btn-primary-bg);
+            color: white;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--btn-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--btn-secondary-bg);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--btn-secondary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Loading Animation */
+        .loading-wrapper {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 3rem;
+            padding: 0.8rem 2rem;
+            width: fit-content;
+            margin: 1rem auto;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .loader {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Results Table */
+        .results-area {
+            margin-top: 2rem;
+            border-radius: 1.2rem;
+            overflow-x: auto;
+            animation: fadeUp 0.5s ease-out;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        th {
+            background: var(--table-header-bg);
+            padding: 1rem 1.2rem;
+            text-align: left;
+            font-weight: 700;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border-light);
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-primary);
+        }
+
+        tr:hover td {
+            background: var(--table-row-hover);
+            transition: background 0.2s;
+        }
+
+        .rank-high {
+            color: #10b981;
+            font-weight: 700;
+        }
+        .rank-mid {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+        .rank-none {
+            color: #ef4444;
+            font-weight: 600;
+        }
+        .url-cell {
+            font-size: 0.85rem;
+            word-break: break-all;
+            color: var(--text-muted);
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #fee2e2, #ffdede);
+            color: #b91c1c;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            border-left: 4px solid #ef4444;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+            background: var(--card-bg);
+            border-radius: 1.2rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.7rem;
+            border-top: 1px solid var(--border-light);
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 680px) {
+            .card-body { padding: 1.2rem; }
+            th, td { padding: 0.7rem; font-size: 0.8rem; }
+            .btn { padding: 0.6rem 1.2rem; }
+            h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="card-header">
+        <div class="logo-section">
+            <h1>🔍 RankVision</h1>
+            <div class="badge">Global SEO Tracker</div>
+        </div>
+        <button class="theme-toggle" id="themeToggleBtn">
+            🌓 <span>Dark/Light</span>
+        </button>
+    </div>
+
+    <div class="card-body">
+        <div class="form-grid">
+            <!-- Website URL -->
+            <div class="input-group">
+                <label>🌐 Website URL</label>
+                <input type="text" id="websiteUrl" placeholder="https://www.yourdomain.com" value="https://rankvision.demo">
+                <div style="font-size: 0.7rem; opacity: 0.7;">Include https:// or http://</div>
+            </div>
+
+            <!-- Keywords -->
+            <div class="input-group">
+                <label>🔑 Keywords (comma separated)</label>
+                <input type="text" id="keywordsInput" placeholder="SEO tools, keyword tracker, backlink checker, rank monitoring">
+            </div>
+
+            <!-- Country Dropdown with Scroll -->
+            <div class="input-group">
+                <label>📍 Target Country</label>
+                <div class="country-selector" id="countrySelector">
+                    <div class="dropdown-btn" id="dropdownBtn">
+                        <span id="selectedCountry">United States</span>
+                        <span class="dropdown-arrow" id="dropdownArrow">▼</span>
+                    </div>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <div class="search-wrapper">
+                            <input type="text" id="countrySearch" placeholder="🔎 Search country..." autocomplete="off">
+                        </div>
+                        <div class="country-list" id="countryList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" id="checkBtn">📊 Check Position</button>
+                <button class="btn btn-secondary" id="resetBtn">⟳ Clear All</button>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="loading-wrapper">
+            <div class="loader"></div>
+            <span>Scanning Google SERP rankings...</span>
+        </div>
+
+        <!-- Results Container -->
+        <div id="resultsContainer">
+            <div class="empty-state">
+                ✨ Enter a website, add keywords & select country<br>
+                Get simulated global rankings instantly
+            </div>
+        </div>
+    </div>
+    <footer>⚡ Powered by intelligent mock SERP data | 190+ countries supported</footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // 1. COMPLETE COUNTRIES ARRAY (190+)
+    // --------------------------------------------------------------
+    const allCountries = [
+        "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
+        "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia",
+        "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia",
+        "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica",
+        "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt",
+        "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon",
+        "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti",
+        "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan",
+        "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos",
+        "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi",
+        "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova",
+        "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands",
+        "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Palestine",
+        "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia",
+        "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino",
+        "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia",
+        "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname",
+        "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga",
+        "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates",
+        "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen",
+        "Zambia", "Zimbabwe"
+    ];
+
+    // DOM Elements
+    const websiteInput = document.getElementById('websiteUrl');
+    const keywordsInput = document.getElementById('keywordsInput');
+    const checkBtn = document.getElementById('checkBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const themeToggle = document.getElementById('themeToggleBtn');
+    
+    // Country dropdown elements
+    const dropdownBtn = document.getElementById('dropdownBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const selectedCountrySpan = document.getElementById('selectedCountry');
+    const countrySearch = document.getElementById('countrySearch');
+    const countryListDiv = document.getElementById('countryList');
+    const dropdownArrowSpan = document.getElementById('dropdownArrow');
+
+    let currentCountry = "United States";
+    let filteredCountries = [...allCountries];
+
+    // Render country list (scrollable)
+    function renderCountryList(countriesArray) {
+        countryListDiv.innerHTML = '';
+        countriesArray.forEach(country => {
+            const div = document.createElement('div');
+            div.className = 'country-item';
+            if (country === currentCountry) div.classList.add('selected');
+            div.textContent = country;
+            div.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentCountry = country;
+                selectedCountrySpan.textContent = country;
+                dropdownMenu.classList.remove('open');
+                dropdownArrowSpan.classList.remove('open');
+                renderCountryList(filteredCountries);
+            });
+            countryListDiv.appendChild(div);
+        });
+    }
+
+    function filterCountries() {
+        const term = countrySearch.value.toLowerCase().trim();
+        filteredCountries = allCountries.filter(c => c.toLowerCase().includes(term));
+        renderCountryList(filteredCountries);
+    }
+
+    // Dropdown Toggle
+    dropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = dropdownMenu.classList.contains('open');
+        if (!isOpen) {
+            dropdownMenu.classList.add('open');
+            dropdownArrowSpan.classList.add('open');
+            countrySearch.value = '';
+            filterCountries();
+            countrySearch.focus();
+        } else {
+            dropdownMenu.classList.remove('open');
+            dropdownArrowSpan.classList.remove('open');
+        }
+    });
+
+    countrySearch.addEventListener('input', filterCountries);
+    document.addEventListener('click', (e) => {
+        if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            dropdownMenu.classList.remove('open');
+            dropdownArrowSpan.classList.remove('open');
+        }
+    });
+
+    renderCountryList(allCountries);
+    selectedCountrySpan.textContent = "United States";
+
+    // --------------------------------------------------------------
+    // 2. MOCK RANKING ENGINE
+    // --------------------------------------------------------------
+    function getMockRanking(keyword, country, targetDomain) {
+        let hash = 0;
+        const seed = (keyword + country).toLowerCase();
+        for (let i = 0; i < seed.length; i++) {
+            hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+            hash |= 0;
+        }
+        const absHash = Math.abs(hash);
+        let rawPos = (absHash % 130) + 1;
+        let positionText = "";
+        let foundUrl = "";
+        const cleanDomain = targetDomain.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+        
+        if (rawPos <= 100) {
+            positionText = `#${rawPos}`;
+            const ownRankChance = (absHash % 100) < 38;
+            if (ownRankChance) {
+                const slug = keyword.toLowerCase().replace(/[^a-z0-9]+/g, '-').substring(0, 35);
+                foundUrl = `https://${cleanDomain}/${slug || 'seo'}`;
+            } else {
+                const competitors = ["moz.com", "semrush.com", "ahrefs.com", "spyfu.com", "backlinko.com", "searchenginejournal.com"];
+                foundUrl = `https://${competitors[absHash % competitors.length]}/blog/${keyword.toLowerCase().replace(/ /g, '-')}`;
+            }
+            if (rawPos <= 3) foundUrl = `https://${cleanDomain}/best-${keyword.toLowerCase().replace(/ /g, '-')}`;
+        } else {
+            positionText = "Not in top 100";
+            foundUrl = "—";
+        }
+        return { position: positionText, url: foundUrl };
+    }
+
+    function extractDomain(url) {
+        try {
+            return new URL(url).hostname.replace(/^www\./, '');
+        } catch {
+            return url.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+        }
+    }
+
+    function parseKeywords(raw) {
+        return raw.split(',').map(k => k.trim()).filter(k => k.length > 0);
+    }
+
+    function isValidUrl(url) {
+        try {
+            const u = new URL(url);
+            return u.protocol === 'http:' || u.protocol === 'https:';
+        } catch { return false; }
+    }
+
+    function showError(msg) {
+        resultsContainer.innerHTML = `<div class="error-message">⚠️ ${msg}</div>`;
+    }
+
+    function renderTable(results) {
+        if (!results.length) {
+            resultsContainer.innerHTML = `<div class="empty-state">No results to display.</div>`;
+            return;
+        }
+        let html = `<div class="results-area"><table><thead><tr>
+            <th>🔑 Keyword</th><th>📈 Position</th><th>🔗 URL Found</th><th>🌍 Country</th>
+        </tr></thead><tbody>`;
+        results.forEach(r => {
+            let rankClass = '';
+            if (r.position !== "Not in top 100") {
+                const num = parseInt(r.position.replace('#', ''));
+                if (num <= 10) rankClass = 'rank-high';
+                else if (num <= 30) rankClass = '';
+                else rankClass = 'rank-mid';
+            } else rankClass = 'rank-none';
+            html += `<tr>
+                <td><strong>${escapeHtml(r.keyword)}</strong></td>
+                <td class="${rankClass}">${escapeHtml(r.position)}</td>
+                <td class="url-cell">${r.foundUrl !== "—" ? `<span style="color:#667eea;">${escapeHtml(r.foundUrl)}</span>` : escapeHtml(r.foundUrl)}</td>
+                <td>${escapeHtml(r.country)}</td>
+            </tr>`;
+        });
+        html += `</tbody></table></div>`;
+        resultsContainer.innerHTML = html;
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    async function performCheck() {
+        const url = websiteInput.value.trim();
+        const rawKeywords = keywordsInput.value.trim();
+        const country = currentCountry;
+        
+        if (!url) { showError("Please enter a website URL."); return; }
+        if (!isValidUrl(url)) { showError("Invalid URL. Use http:// or https://"); return; }
+        if (!rawKeywords) { showError("Please enter keywords separated by commas."); return; }
+        
+        const keywordsArr = parseKeywords(rawKeywords);
+        if (keywordsArr.length === 0) { showError("No valid keywords found."); return; }
+        
+        const domain = extractDomain(url);
+        loadingIndicator.style.display = 'flex';
+        resultsContainer.innerHTML = '';
+        
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        const results = [];
+        for (let kw of keywordsArr) {
+            const { position, url: foundUrl } = getMockRanking(kw, country, domain);
+            results.push({ keyword: kw, position: position, foundUrl: foundUrl, country: country });
+        }
+        
+        loadingIndicator.style.display = 'none';
+        renderTable(results);
+    }
+
+    function resetForm() {
+        websiteInput.value = '';
+        keywordsInput.value = '';
+        currentCountry = "United States";
+        selectedCountrySpan.textContent = "United States";
+        countrySearch.value = '';
+        filterCountries();
+        resultsContainer.innerHTML = `<div class="empty-state">✨ Form cleared. Ready for new SEO analysis.</div>`;
+        loadingIndicator.style.display = 'none';
+        dropdownMenu.classList.remove('open');
+    }
+
+    // Dark Mode
+    function initTheme() {
+        const saved = localStorage.getItem('rankvision_theme');
+        if (saved === 'dark') document.body.classList.add('dark');
+        else if (saved === 'light') document.body.classList.remove('dark');
+        else if (window.matchMedia('(prefers-color-scheme: dark)').matches) document.body.classList.add('dark');
+    }
+    function toggleTheme() {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('rankvision_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    }
+    
+    themeToggle.addEventListener('click', toggleTheme);
+    checkBtn.addEventListener('click', (e) => { e.preventDefault(); performCheck(); });
+    resetBtn.addEventListener('click', (e) => { e.preventDefault(); resetForm(); });
+    
+    window.addEventListener('DOMContentLoaded', () => {
+        initTheme();
+        if (!websiteInput.value) websiteInput.value = 'https://rankvision.demo';
+        if (!keywordsInput.value) keywordsInput.value = 'SEO audit, keyword tracker, backlink checker';
+        resultsContainer.innerHTML = `<div class="empty-state">🌎 Ready to analyze global rankings. Select country and click "Check Position".</div>`;
+    });
+</script>
+</body>
+</html>
